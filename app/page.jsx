@@ -83,7 +83,7 @@ export default function Home() {
             Ready to Take Control of Your Finances?
           </h2>
           <p className="text-blue-100 mb-8 max-w-2xl mx-auto">
-            Join thousands of users who are already managing their finances smarter with Welth
+            Join thousands of users who are already managing their finances smarter with Finy
           </p>
           <Link href="/dashboard">
             <Button
