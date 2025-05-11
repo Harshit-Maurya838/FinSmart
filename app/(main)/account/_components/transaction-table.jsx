@@ -377,7 +377,7 @@ export function TransactionTable({ transactions }) {
                         : "text-green-500"
                     )}
                   >
-                    {transaction.type === "EXPENSE" ? "-" : "+"}$
+                    {transaction.type === "EXPENSE" ? "-" : "+"}&#8377;
                     {transaction.amount.toFixed(2)}
                   </TableCell>
                   <TableCell>
