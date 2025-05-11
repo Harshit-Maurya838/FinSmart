@@ -8,13 +8,48 @@ import {
   Section,
   Text,
 } from "@react-email/components";
-import * as React from "react";
 
-export default function Email({
-    userName= "",
-    type= "budget-alert",
-    data= {},
-  },) {
+// Dummy data for preview
+const PREVIEW_DATA = {
+  monthlyReport: {
+    userName: "John Doe",
+    type: "monthly-report",
+    data: {
+      month: "December",
+      stats: {
+        totalIncome: 5000,
+        totalExpenses: 3500,
+        byCategory: {
+          housing: 1500,
+          groceries: 600,
+          transportation: 400,
+          entertainment: 300,
+          utilities: 700,
+        },
+      },
+      insights: [
+        "Your housing expenses are 43% of your total spending - consider reviewing your housing costs.",
+        "Great job keeping entertainment expenses under control this month!",
+        "Setting up automatic savings could help you save 20% more of your income.",
+      ],
+    },
+  },
+  budgetAlert: {
+    userName: "John Doe",
+    type: "budget-alert",
+    data: {
+      percentageUsed: 85,
+      budgetAmount: 4000,
+      totalExpenses: 3400,
+    },
+  },
+};
+
+export default function EmailTemplate({
+  userName = "",
+  type = "monthly-report",
+  data = {},
+}) {
   if (type === "monthly-report") {
     return (
       <Html>
@@ -91,7 +126,7 @@ export default function Email({
         <Preview>Budget Alert</Preview>
         <Body style={styles.body}>
           <Container style={styles.container}>
-            <Heading style={styles.heading}>Budget Alert</Heading>
+            <Heading style={styles.title}>Budget Alert</Heading>
             <Text style={styles.text}>Hello {userName},</Text>
             <Text style={styles.text}>
               You&rsquo;ve used {data?.percentageUsed.toFixed(1)}% of your

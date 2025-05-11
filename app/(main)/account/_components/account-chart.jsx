@@ -1,12 +1,9 @@
 "use client";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { endOfDay, format, startOfDay, subDays } from "date-fns";
-import React, { useMemo, useState } from "react";
+
+import { useState, useMemo } from "react";
 import {
   BarChart,
   Bar,
-  Rectangle,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -14,6 +11,15 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { format, subDays, startOfDay, endOfDay } from "date-fns";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const DATE_RANGES = {
   "7D": { label: "Last 7 Days", days: 7 },
@@ -23,7 +29,7 @@ const DATE_RANGES = {
   ALL: { label: "All Time", days: null },
 };
 
-const AccountChart = ({ transactions }) => {
+export function AccountChart({ transactions }) {
   const [dateRange, setDateRange] = useState("1M");
 
   const filteredData = useMemo(() => {
@@ -33,10 +39,12 @@ const AccountChart = ({ transactions }) => {
       ? startOfDay(subDays(now, range.days))
       : startOfDay(new Date(0));
 
+    // Filter transactions within date range
     const filtered = transactions.filter(
       (t) => new Date(t.date) >= startDate && new Date(t.date) <= endOfDay(now)
     );
 
+    // Group transactions by date
     const grouped = filtered.reduce((acc, transaction) => {
       const date = format(new Date(transaction.date), "MMM dd");
       if (!acc[date]) {
@@ -56,6 +64,7 @@ const AccountChart = ({ transactions }) => {
     );
   }, [transactions, dateRange]);
 
+  // Calculate totals for the selected period
   const totals = useMemo(() => {
     return filteredData.reduce(
       (acc, day) => ({
@@ -131,7 +140,14 @@ const AccountChart = ({ transactions }) => {
                 axisLine={false}
                 tickFormatter={(value) => `$${value}`}
               />
-              <Tooltip formatter={(value) => [`$${value}`, undefined]} />
+              <Tooltip
+                formatter={(value) => [`$${value}`, undefined]}
+                contentStyle={{
+                  backgroundColor: "hsl(var(--popover))",
+                  border: "1px solid hsl(var(--border))",
+                  borderRadius: "var(--radius)",
+                }}
+              />
               <Legend />
               <Bar
                 dataKey="income"
@@ -151,6 +167,4 @@ const AccountChart = ({ transactions }) => {
       </CardContent>
     </Card>
   );
-};
-
-export default AccountChart;
+}

@@ -1,31 +1,32 @@
 "use server";
 
-import aj from "@/lib/arcjet";
-import { db } from "@/lib/prisma";
-import { request } from "@arcjet/next";
 import { auth } from "@clerk/nextjs/server";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { db } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
-
+import { GoogleGenerativeAI } from "@google/generative-ai";
+import aj from "@/lib/arcjet";
+import { request } from "@arcjet/next";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-
 
 const serializeAmount = (obj) => ({
   ...obj,
   amount: obj.amount.toNumber(),
 });
 
+// Create Transaction
 export async function createTransaction(data) {
   try {
     const { userId } = await auth();
     if (!userId) throw new Error("Unauthorized");
 
-    // Arcjet to add transaction rate
+    // Get request data for ArcJet
     const req = await request();
+
+    // Check rate limit
     const decision = await aj.protect(req, {
-        userId,
-        requested: 1
+      userId,
+      requested: 1, // Specify how many tokens to consume
     });
 
     if (decision.isDenied()) {
@@ -49,7 +50,9 @@ export async function createTransaction(data) {
       where: { clerkUserId: userId },
     });
 
-    if (!user) throw new Error("User not found");
+    if (!user) {
+      throw new Error("User not found");
+    }
 
     const account = await db.account.findUnique({
       where: {
@@ -58,11 +61,15 @@ export async function createTransaction(data) {
       },
     });
 
-    if (!account) throw new Error("Account not found");
+    if (!account) {
+      throw new Error("Account not found");
+    }
 
+    // Calculate new balance
     const balanceChange = data.type === "EXPENSE" ? -data.amount : data.amount;
     const newBalance = account.balance.toNumber() + balanceChange;
 
+    // Create transaction and update account balance
     const transaction = await db.$transaction(async (tx) => {
       const newTransaction = await tx.transaction.create({
         data: {
@@ -125,6 +132,7 @@ export async function updateTransaction(id, data) {
 
     if (!user) throw new Error("User not found");
 
+    // Get original transaction to calculate balance change
     const originalTransaction = await db.transaction.findUnique({
       where: {
         id,
@@ -137,12 +145,18 @@ export async function updateTransaction(id, data) {
 
     if (!originalTransaction) throw new Error("Transaction not found");
 
-    const oldBalanceChange = originalTransaction.type === "EXPENSE" ? -originalTransaction.amount.toNumber() : originalTransaction.amount.toNumber();
+    // Calculate balance changes
+    const oldBalanceChange =
+      originalTransaction.type === "EXPENSE"
+        ? -originalTransaction.amount.toNumber()
+        : originalTransaction.amount.toNumber();
 
-    const newBalanceChange = data.type === "EXPENSE" ? -data.amount : data.amount;
+    const newBalanceChange =
+      data.type === "EXPENSE" ? -data.amount : data.amount;
 
     const netBalanceChange = newBalanceChange - oldBalanceChange;
 
+    // Update transaction and account balance in a transaction
     const transaction = await db.$transaction(async (tx) => {
       const updated = await tx.transaction.update({
         where: {
@@ -180,6 +194,40 @@ export async function updateTransaction(id, data) {
   }
 }
 
+// Get User Transactions
+export async function getUserTransactions(query = {}) {
+  try {
+    const { userId } = await auth();
+    if (!userId) throw new Error("Unauthorized");
+
+    const user = await db.user.findUnique({
+      where: { clerkUserId: userId },
+    });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const transactions = await db.transaction.findMany({
+      where: {
+        userId: user.id,
+        ...query,
+      },
+      include: {
+        account: true,
+      },
+      orderBy: {
+        date: "desc",
+      },
+    });
+
+    return { success: true, data: transactions };
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
+// Scan Receipt
 export async function scanReceipt(file) {
   try {
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
@@ -241,7 +289,6 @@ export async function scanReceipt(file) {
     throw new Error("Failed to scan receipt");
   }
 }
-
 
 // Helper function to calculate next recurring date
 function calculateNextRecurringDate(startDate, interval) {

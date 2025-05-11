@@ -4,7 +4,7 @@ import { db } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 
-export async function getCuurentBudget(accountId) {
+export async function getCurrentBudget(accountId) {
   try {
     const { userId } = await auth();
     if (!userId) throw new Error("Unauthorized");
@@ -13,7 +13,9 @@ export async function getCuurentBudget(accountId) {
       where: { clerkUserId: userId },
     });
 
-    if (!user) throw new Error("User not found");
+    if (!user) {
+      throw new Error("User not found");
+    }
 
     const budget = await db.budget.findFirst({
       where: {
@@ -21,6 +23,7 @@ export async function getCuurentBudget(accountId) {
       },
     });
 
+    // Get current month's expenses
     const currentDate = new Date();
     const startOfMonth = new Date(
       currentDate.getFullYear(),
@@ -55,7 +58,7 @@ export async function getCuurentBudget(accountId) {
         : 0,
     };
   } catch (error) {
-    console.error("Error fetching budget: ", error);
+    console.error("Error fetching budget:", error);
     throw error;
   }
 }
@@ -71,6 +74,7 @@ export async function updateBudget(amount) {
 
     if (!user) throw new Error("User not found");
 
+    // Update or create budget
     const budget = await db.budget.upsert({
       where: {
         userId: user.id,
@@ -83,17 +87,14 @@ export async function updateBudget(amount) {
         amount,
       },
     });
-    
+
     revalidatePath("/dashboard");
     return {
-        success: true,
-        data: { ...budget, amount: budget.amount.toNumber()}
-    }
+      success: true,
+      data: { ...budget, amount: budget.amount.toNumber() },
+    };
   } catch (error) {
-    console.error("Error fetching budget: ", error);
-    return {
-        success: false,
-        error: error.message
-    }
+    console.error("Error updating budget:", error);
+    return { success: false, error: error.message };
   }
 }

@@ -28,7 +28,7 @@ import { Switch } from "@/components/ui/switch";
 import { createAccount } from "@/actions/dashboard";
 import { accountSchema } from "@/app/lib/schema";
 
-const CreateAccountDrawer = ({ children }) => {
+export function CreateAccountDrawer({ children }) {
   const [open, setOpen] = useState(false);
   const {
     register,
@@ -59,12 +59,12 @@ const CreateAccountDrawer = ({ children }) => {
   };
 
   useEffect(() => {
-    if (newAccount && !createAccountLoading) {
+    if (newAccount) {
       toast.success("Account created successfully");
       reset();
       setOpen(false);
     }
-  }, [newAccount, createAccountLoading]);
+  }, [newAccount, reset]);
 
   useEffect(() => {
     if (error) {
@@ -107,7 +107,7 @@ const CreateAccountDrawer = ({ children }) => {
               </label>
               <Select
                 onValueChange={(value) => setValue("type", value)}
-                defaultValue="CURRENT"
+                defaultValue={watch("type")}
               >
                 <SelectTrigger id="type">
                   <SelectValue placeholder="Select type" />
@@ -186,6 +186,4 @@ const CreateAccountDrawer = ({ children }) => {
       </DrawerContent>
     </Drawer>
   );
-};
-
-export default CreateAccountDrawer;
+}

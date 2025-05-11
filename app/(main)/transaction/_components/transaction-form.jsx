@@ -1,15 +1,17 @@
 "use client";
-import { createTransaction, updateTransaction } from "@/actions/transaction";
-import { transactionSchema } from "@/app/lib/schema";
-import CreateAccountDrawer from "@/components/create-account-drawer";
+
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CalendarIcon, Loader2 } from "lucide-react";
+import { format } from "date-fns";
+import { useRouter, useSearchParams } from "next/navigation";
+import useFetch from "@/hooks/use-fetch";
+import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Switch } from "@/components/ui/switch";
 import {
   Select,
   SelectContent,
@@ -17,19 +19,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
-import useFetch from "@/hooks/use-fetch";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { CreateAccountDrawer } from "@/components/create-account-drawer";
 import { cn } from "@/lib/utils";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { format } from "date-fns";
-import { CalendarIcon, Loader2 } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { ReceiptScanner } from "./scan-receipt";
+import { createTransaction, updateTransaction } from "@/actions/transaction";
+import { transactionSchema } from "@/app/lib/schema";
+import { ReceiptScanner } from "./recipt-scanner";
 
-function AddTransactionForm({
+export function AddTransactionForm({
   accounts,
   categories,
   editMode = false,
@@ -38,6 +40,7 @@ function AddTransactionForm({
   const router = useRouter();
   const searchParams = useSearchParams();
   const editId = searchParams.get("edit");
+
   const {
     register,
     handleSubmit,
@@ -78,14 +81,6 @@ function AddTransactionForm({
     data: transactionResult,
   } = useFetch(editMode ? updateTransaction : createTransaction);
 
-  const type = watch("type");
-  const isRecurring = watch("isRecurring");
-  const date = watch("date");
-
-  const filteredCategories = categories.filter(
-    (category) => category.type === type
-  );
-
   const onSubmit = (data) => {
     const formData = {
       ...data,
@@ -125,19 +120,27 @@ function AddTransactionForm({
     }
   }, [transactionResult, transactionLoading, editMode]);
 
+  const type = watch("type");
+  const isRecurring = watch("isRecurring");
+  const date = watch("date");
+
+  const filteredCategories = categories.filter(
+    (category) => category.type === type
+  );
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       {/* Receipt Scanner - Only show in create mode */}
       {!editMode && <ReceiptScanner onScanComplete={handleScanComplete} />}
 
       {/* Type */}
-      <div className="space-y-2 w-full">
+      <div className="space-y-2">
         <label className="text-sm font-medium">Type</label>
         <Select
           onValueChange={(value) => setValue("type", value)}
           defaultValue={type}
         >
-          <SelectTrigger className="w-full">
+          <SelectTrigger>
             <SelectValue placeholder="Select type" />
           </SelectTrigger>
           <SelectContent>
@@ -171,7 +174,7 @@ function AddTransactionForm({
             onValueChange={(value) => setValue("accountId", value)}
             defaultValue={getValues("accountId")}
           >
-            <SelectTrigger className="w-full">
+            <SelectTrigger>
               <SelectValue placeholder="Select account" />
             </SelectTrigger>
             <SelectContent>
@@ -197,14 +200,13 @@ function AddTransactionForm({
       </div>
 
       {/* Category */}
-      <div className="space-y-2 grid grid-cols-1">
+      <div className="space-y-2">
         <label className="text-sm font-medium">Category</label>
-        <div className="w-full">
         <Select
           onValueChange={(value) => setValue("category", value)}
           defaultValue={getValues("category")}
         >
-          <SelectTrigger className="w-full">
+          <SelectTrigger>
             <SelectValue placeholder="Select category" />
           </SelectTrigger>
           <SelectContent>
@@ -218,7 +220,6 @@ function AddTransactionForm({
         {errors.category && (
           <p className="text-sm text-red-500">{errors.category.message}</p>
         )}
-        </div>
       </div>
 
       {/* Date */}
@@ -285,7 +286,7 @@ function AddTransactionForm({
             onValueChange={(value) => setValue("recurringInterval", value)}
             defaultValue={getValues("recurringInterval")}
           >
-            <SelectTrigger className="w-full">
+            <SelectTrigger>
               <SelectValue placeholder="Select interval" />
             </SelectTrigger>
             <SelectContent>
@@ -304,7 +305,7 @@ function AddTransactionForm({
       )}
 
       {/* Actions */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="flex gap-4">
         <Button
           type="button"
           variant="outline"
@@ -329,5 +330,3 @@ function AddTransactionForm({
     </form>
   );
 }
-
-export default AddTransactionForm;

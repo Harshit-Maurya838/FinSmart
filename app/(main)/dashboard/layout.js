@@ -1,6 +1,6 @@
 import DashboardPage from "./page";
 import { BarLoader } from "react-spinners";
-import { Suspense, React } from "react";
+import { Suspense } from "react";
 
 export default function Layout() {
   return (

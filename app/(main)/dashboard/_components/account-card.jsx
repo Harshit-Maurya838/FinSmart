@@ -2,6 +2,7 @@
 
 import { ArrowUpRight, ArrowDownRight, CreditCard } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
 import { useEffect } from "react";
 import useFetch from "@/hooks/use-fetch";
 import {
@@ -15,7 +16,7 @@ import Link from "next/link";
 import { updateDefaultAccount } from "@/actions/account";
 import { toast } from "sonner";
 
-function AccountCard({ account }) {
+export function AccountCard({ account }) {
   const { name, type, balance, id, isDefault } = account;
 
   const {
@@ -25,8 +26,8 @@ function AccountCard({ account }) {
     error,
   } = useFetch(updateDefaultAccount);
 
-  const handleDefaultChange = async (e) => {
-    e.preventDefault(); // Prevent navigation
+  const handleDefaultChange = async (event) => {
+    event.preventDefault(); // Prevent navigation
 
     if (isDefault) {
       toast.warning("You need atleast 1 default account");
@@ -83,5 +84,3 @@ function AccountCard({ account }) {
     </Card>
   );
 }
-
-export default AccountCard;

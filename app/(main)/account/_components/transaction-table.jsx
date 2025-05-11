@@ -80,7 +80,7 @@ export function TransactionTable({ transactions }) {
   const filteredAndSortedTransactions = useMemo(() => {
     let result = [...transactions];
 
-    // search filter
+    // Apply search filter
     if (searchTerm) {
       const searchLower = searchTerm.toLowerCase();
       result = result.filter((transaction) =>
@@ -88,12 +88,12 @@ export function TransactionTable({ transactions }) {
       );
     }
 
-    // type filter
+    // Apply type filter
     if (typeFilter) {
       result = result.filter((transaction) => transaction.type === typeFilter);
     }
 
-    // recurring filter
+    // Apply recurring filter
     if (recurringFilter) {
       result = result.filter((transaction) => {
         if (recurringFilter === "recurring") return transaction.isRecurring;
@@ -101,7 +101,7 @@ export function TransactionTable({ transactions }) {
       });
     }
 
-    // sorting
+    // Apply sorting
     result.sort((a, b) => {
       let comparison = 0;
 
@@ -168,7 +168,13 @@ export function TransactionTable({ transactions }) {
   } = useFetch(bulkDeleteTransactions);
 
   const handleBulkDelete = async () => {
-    if (!window.confirm(`Are you sure you want to delete ${selectedIds.length}transactions?`)) return;
+    if (
+      !window.confirm(
+        `Are you sure you want to delete ${selectedIds.length} transactions?`
+      )
+    )
+      return;
+
     deleteFn(selectedIds);
   };
 
