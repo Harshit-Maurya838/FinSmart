@@ -18,7 +18,7 @@ export default function RootLayout({ children }) {
     <ClerkProvider>
     <html lang="en">
       <head>
-        <link rel="icon" href="/logo-sm.png" sizes="any" />
+        <link rel="icon" href="/Fevicon.ico" sizes="any" />
       </head>
       <body className={`${inter.className}`}>
         <main className="min-h-screen">
