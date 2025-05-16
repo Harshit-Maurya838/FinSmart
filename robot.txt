@@ -1,0 +1,16 @@
+# robots.txt for FinTrack
+
+User-agent: *
+# Allow landing page
+Allow: /
+
+# Disallow sensitive or user-only routes
+Disallow: /dashboard/
+Disallow: /api/
+Disallow: /account/
+Disallow: /settings/
+Disallow: /transactions/
+Disallow: /budgets/
+Disallow: /reports/
+
+
