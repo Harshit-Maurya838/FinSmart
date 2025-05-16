@@ -54,8 +54,8 @@ const HeroSection = () => {
 
   return (
     <>
-      <section className="pt-40 pb-20 px-4 sm:px-6 lg:px-8 container max-w-7xl mx-auto w-full">
-        <div className="flex flex-col lg:flex-row items-center gap-12 w-full">
+      <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 container max-w-7xl mx-auto w-full">
+        <div className="flex flex-col-reverse lg:flex-row items-center gap-12 w-full">
           <div className="flex-1 text-center lg:text-left w-full">
             <h1 className="text-4xl md:text-5xl lg:text-6xl mb-6 gradient-title">
               Manage Your Finances with Intelligence
@@ -84,7 +84,7 @@ const HeroSection = () => {
           </div>
           <div className="flex-1 relative w-full">
             <div className="accent-gradient rounded-2xl p-1">
-              <div className="bg-background rounded-xl p-6">
+              <div className="bg-background rounded-xl p-4">
                 <div className="hero-image-wrapper mt-5 md:mt-0">
                   <div
                     ref={imageRef}

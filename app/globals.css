@@ -42,14 +42,14 @@ html {
 
     --radius: 0.75rem;
 
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-background: 263 56% 22%; /* Dark, rich purple */
+    --sidebar-foreground: 250 100% 99%; /* White text */
+    --sidebar-primary: 265 83% 57%; /* Vibrant purple for active items */
+    --sidebar-primary-foreground: 250 100% 99%; /* White text */
+    --sidebar-accent: 265 83% 45%; /* Slightly muted purple for hover */
+    --sidebar-accent-foreground: 250 100% 99%; /* White text */
+    --sidebar-border: 265 35% 35%; /* Deep purple border */
+    --sidebar-ring: 265 83% 67%; /* Brighter purple ring */
   }
 
   .dark {
@@ -81,8 +81,8 @@ html {
     --input: 240 10% 20%;
     --ring: 265 83.3% 57.1%;
 
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-background: 270 60% 30%;
+    --sidebar-foreground: 250 100% 99%;
     --sidebar-primary: 224.3 76.3% 48%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 240 3.7% 15.9%;
@@ -154,4 +154,15 @@ html {
 .animate-gradient {
   background-size: 200% 200%;
   animation: gradientMove 3s ease infinite;
+}
+
+.sidebar-active {
+  background-color: hsl(265 83% 45%);
+  color: white;
+  border-radius: 0.5rem;
+  transition: background-color 0.3s;
+}
+
+.sidebar-active:hover {
+  background-color: hsl(265 83% 55%);
 }

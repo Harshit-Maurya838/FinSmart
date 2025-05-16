@@ -7,16 +7,12 @@ import React from 'react'
 
 const TopNav = () => {
   return (
-    <header className="border-b bg-white dark:bg-card">
+    <header className="border-b bg-white/80 backdrop-blur dark:bg-card sticky top-0 z-10">
       <div className="px-4 sm:px-6 lg:px-8 flex h-16 items-center justify-between">
         <div className="flex items-center gap-4">
           <SidebarTrigger />
         </div>
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" className="text-muted-foreground">
-            <Bell size={20} />
-          </Button>
-          
           <div className="flex items-center space-x-4">
           <SignedIn>
             <Link

@@ -9,7 +9,7 @@ import { ProvidersWrapper } from "@/components/ProvidersWrapper";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Finy",
+  title: "FinSmart",
   description: "One stop Finance Platform",
 };
 
