@@ -20,6 +20,7 @@ const aj = arcjet({
       allow: [
         "CATEGORY:SEARCH_ENGINE",
         "GO_HTTP",
+        "BOT:LINKEDIN_CRAWLER",
         "LinkedInBot",
         "Discordbot",
         "facebookexternalhit",
