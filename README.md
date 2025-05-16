@@ -2,6 +2,9 @@
 
 A comprehensive, AI-powered personal finance management platform built using **Next.js**, **Tailwind CSS**, **ShadCN UI**, and **Gemini AI**. This project empowers users to track income, expenses, manage budgets, scan receipts, and generate intelligent monthly financial reports.
 
+![alt text](/public/image-1.png)
+![alt text](/public/image.png)
+
 ---
 
 ## 🚀 Features
@@ -107,7 +110,6 @@ npm install
 # Run locally
 npm run dev
 ```
-
 ---
 
 ## 📧 Contact
