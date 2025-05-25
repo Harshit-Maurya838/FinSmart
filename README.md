@@ -27,7 +27,7 @@ A comprehensive, AI-powered personal finance management platform built using **N
 
 ## 📦 Tech Stack
 
-- **Frontend:** Next.js 14 (App Router), Tailwind CSS, ShadCN UI
+- **Frontend:** Next.js 15 (App Router), Tailwind CSS, ShadCN UI
 - **Backend:** Prisma ORM, Supabase (PostgreSQL), API Routes
 - **Authentication:** Clerk
 - **AI:** Gemini AI (Gemini 1.5 Flash)
@@ -103,7 +103,7 @@ git clone https://github.com/Harshit-Maurya838/FinSmart.git
 cd FinSmart
 
 # Install dependencies
-npm install
+npm install --legacy-peer-deps
 
 # Setup environment variables
 
